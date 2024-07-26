@@ -84,7 +84,7 @@ class HomeAutomationSystem {
 
 public class Main {
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
+        Scanner sc = new Scanner(System.in);
         HomeAutomationSystem homeSystem = new HomeAutomationSystem();
 
         // Creating and adding devices to the system
@@ -102,7 +102,7 @@ public class Main {
             System.out.println("3. Turn off Light2");
             System.out.println("4. Exit");
 
-            int choice = scanner.nextInt();
+            int choice = sc.nextInt();
             switch (choice) {
                 case 1:
                     homeSystem.executeRoutine();

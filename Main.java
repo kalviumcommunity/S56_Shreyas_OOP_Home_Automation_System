@@ -2,21 +2,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+// Abstract base class for all smart devices
 abstract class SmartDevice {
     private String deviceId;
     private boolean status;
 
     public SmartDevice(String deviceId) {
         this.deviceId = deviceId;
-        this.status = false; 
+        this.status = false; // Default to off
     }
 
     public String getDeviceId() {
-        return this.deviceId; 
+        return this.deviceId; // Using 'this' to refer to the current object's deviceId
     }
 
     public boolean isOn() {
-        return this.status; 
+        return this.status; // Using 'this' to refer to the current object's status
     }
 
     public void turnOn() {
@@ -40,9 +41,11 @@ class SmartLight extends SmartDevice {
 
     public void performFunction() {
         if (this.isOn()) { // Using 'this' to call the current object's method
-            System.out.println(this.getDeviceId() + " is providing light."); 
+            System.out.println(this.getDeviceId() + " is providing light."); // Using 'this' to call the current
+                                                                             // object's method
         } else {
-            System.out.println(this.getDeviceId() + " is off, no light."); 
+            System.out.println(this.getDeviceId() + " is off, no light."); // Using 'this' to call the current object's
+                                                                           // method
         }
     }
 }
@@ -212,17 +215,17 @@ public class Main {
         HomeAutomationSystem homeSystem = new HomeAutomationSystem();
 
         // Create and add devices to the system
-        SmartDevice light1 = new SmartLight("Light1");
-        SmartDevice thermostat = new SmartThermostat("Thermostat");
-        SmartDevice camera = new SmartSecurityCamera("Camera");
-        SmartDevice doorLock = new SmartDoorLock("DoorLock");
-        SmartDevice appliance = new SmartAppliance("Appliance");
+        SmartDevice[] devicesArray = {
+                new SmartLight("Light1"),
+                new SmartThermostat("Thermostat"),
+                new SmartSecurityCamera("Camera"),
+                new SmartDoorLock("DoorLock"),
+                new SmartAppliance("Appliance")
+        };
 
-        homeSystem.addDevice(light1);
-        homeSystem.addDevice(thermostat);
-        homeSystem.addDevice(camera);
-        homeSystem.addDevice(doorLock);
-        homeSystem.addDevice(appliance);
+        for (SmartDevice device : devicesArray) {
+            homeSystem.addDevice(device);
+        }
 
         while (true) {
             System.out.println("\nChoose an option:");

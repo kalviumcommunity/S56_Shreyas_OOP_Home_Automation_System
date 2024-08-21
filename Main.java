@@ -7,9 +7,13 @@ abstract class SmartDevice {
     private String deviceId;
     private boolean status;
 
+    private static int totalDevices = 0;
+    private static int devicesOn = 0;
+
     public SmartDevice(String deviceId) {
         this.deviceId = deviceId;
         this.status = false; // Default to off
+        totalDevices++;
     }
 
     public String getDeviceId() {
@@ -21,16 +25,31 @@ abstract class SmartDevice {
     }
 
     public void turnOn() {
-        this.status = true;
+        if (!this.status) {
+            this.status = true;
+            devicesOn++; 
+        }
         System.out.println(this.deviceId + " is now ON.");
     }
 
     public void turnOff() {
-        this.status = false;
+        if (this.status) { 
+            this.status = false;
+            devicesOn--; 
+        }
         System.out.println(this.deviceId + " is now OFF.");
     }
 
     public abstract void performFunction();
+
+    // Static methods to access the static variables
+    public static int getTotalDevices() {
+        return totalDevices;
+    }
+
+    public static int getDevicesOn() {
+        return devicesOn;
+    }
 }
 
 // Smart Light class inheriting from SmartDevice
@@ -201,6 +220,9 @@ public class Main {
             homeSystem.addDevice(devicesArray[i]);
         }
 
+        System.out.println("Total devices: " + SmartDevice.getTotalDevices());
+        System.out.println("Devices that are ON: " + SmartDevice.getDevicesOn());
+
         while (true) {
             System.out.println("\nChoose an option:");
             System.out.println("1. Execute Morning Routine");
@@ -229,6 +251,8 @@ public class Main {
                 default:
                     System.out.println("Invalid choice. Please try again.");
             }
+
+            System.out.println("Devices that are ON: " + SmartDevice.getDevicesOn());
         }
     }
 }

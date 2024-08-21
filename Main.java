@@ -13,21 +13,21 @@ abstract class SmartDevice {
     }
 
     public String getDeviceId() {
-        return this.deviceId; // Using 'this' to refer to the current object's deviceId
+        return this.deviceId;
     }
 
     public boolean isOn() {
-        return this.status; // Using 'this' to refer to the current object's status
+        return this.status;
     }
 
     public void turnOn() {
-        this.status = true; // Using 'this' to refer to the current object's status
-        System.out.println(this.deviceId + " is now ON."); // Using 'this' to refer to the current object's deviceId
+        this.status = true;
+        System.out.println(this.deviceId + " is now ON.");
     }
 
     public void turnOff() {
-        this.status = false; // Using 'this' to refer to the current object's status
-        System.out.println(this.deviceId + " is now OFF."); // Using 'this' to refer to the current object's deviceId
+        this.status = false;
+        System.out.println(this.deviceId + " is now OFF.");
     }
 
     public abstract void performFunction();
@@ -40,12 +40,10 @@ class SmartLight extends SmartDevice {
     }
 
     public void performFunction() {
-        if (this.isOn()) { // Using 'this' to call the current object's method
-            System.out.println(this.getDeviceId() + " is providing light."); // Using 'this' to call the current
-                                                                             // object's method
+        if (this.isOn()) {
+            System.out.println(this.getDeviceId() + " is providing light.");
         } else {
-            System.out.println(this.getDeviceId() + " is off, no light."); // Using 'this' to call the current object's
-                                                                           // method
+            System.out.println(this.getDeviceId() + " is off, no light.");
         }
     }
 }
@@ -60,31 +58,15 @@ class SmartThermostat extends SmartDevice {
     }
 
     public void setTemperature(int temperature) {
-        this.temperature = temperature; // Using 'this' to refer to the current object's temperature
-        System.out.println(this.getDeviceId() + " temperature set to " + this.temperature + " degrees."); // Using
-                                                                                                          // 'this' to
-                                                                                                          // call the
-                                                                                                          // current
-                                                                                                          // object's
-                                                                                                          // method and
-                                                                                                          // attribute
+        this.temperature = temperature;
+        System.out.println(this.getDeviceId() + " temperature set to " + this.temperature + " degrees.");
     }
 
     public void performFunction() {
-        if (this.isOn()) { // Using 'this' to call the current object's method
-            System.out.println(this.getDeviceId() + " is regulating temperature to " + this.temperature + " degrees."); // Using
-                                                                                                                        // 'this'
-                                                                                                                        // to
-                                                                                                                        // call
-                                                                                                                        // the
-                                                                                                                        // current
-                                                                                                                        // object's
-                                                                                                                        // method
-                                                                                                                        // and
-                                                                                                                        // attribute
+        if (this.isOn()) {
+            System.out.println(this.getDeviceId() + " is regulating temperature to " + this.temperature + " degrees.");
         } else {
-            System.out.println(this.getDeviceId() + " is off, not regulating temperature."); // Using 'this' to call the
-                                                                                             // current object's method
+            System.out.println(this.getDeviceId() + " is off, not regulating temperature.");
         }
     }
 }
@@ -96,13 +78,10 @@ class SmartSecurityCamera extends SmartDevice {
     }
 
     public void performFunction() {
-        if (this.isOn()) { // Using 'this' to call the current object's method
-            System.out.println(this.getDeviceId() + " is monitoring and recording activity."); // Using 'this' to call
-                                                                                               // the current object's
-                                                                                               // method
+        if (this.isOn()) {
+            System.out.println(this.getDeviceId() + " is monitoring and recording activity.");
         } else {
-            System.out.println(this.getDeviceId() + " is off, not monitoring."); // Using 'this' to call the current
-                                                                                 // object's method
+            System.out.println(this.getDeviceId() + " is off, not monitoring.");
         }
     }
 }
@@ -114,11 +93,10 @@ class SmartDoorLock extends SmartDevice {
     }
 
     public void performFunction() {
-        if (this.isOn()) { // Using 'this' to call the current object's method
-            System.out.println(this.getDeviceId() + " is locked."); // Using 'this' to call the current object's method
+        if (this.isOn()) {
+            System.out.println(this.getDeviceId() + " is locked.");
         } else {
-            System.out.println(this.getDeviceId() + " is unlocked."); // Using 'this' to call the current object's
-                                                                      // method
+            System.out.println(this.getDeviceId() + " is unlocked.");
         }
     }
 }
@@ -130,12 +108,10 @@ class SmartAppliance extends SmartDevice {
     }
 
     public void performFunction() {
-        if (this.isOn()) { // Using 'this' to call the current object's method
-            System.out.println(this.getDeviceId() + " is operating."); // Using 'this' to call the current object's
-                                                                       // method
+        if (this.isOn()) {
+            System.out.println(this.getDeviceId() + " is operating.");
         } else {
-            System.out.println(this.getDeviceId() + " is off, not operating."); // Using 'this' to call the current
-                                                                                // object's method
+            System.out.println(this.getDeviceId() + " is off, not operating.");
         }
     }
 }
@@ -145,22 +121,22 @@ class HomeAutomationSystem {
     private List<SmartDevice> devices;
 
     public HomeAutomationSystem() {
-        this.devices = new ArrayList<>(); // Using 'this' to refer to the current object's devices list
+        this.devices = new ArrayList<>();
     }
 
     public void addDevice(SmartDevice device) {
-        this.devices.add(device); // Using 'this' to refer to the current object's devices list
+        this.devices.add(device);
         System.out.println(device.getDeviceId() + " added to the home automation system.");
     }
 
     public void removeDevice(SmartDevice device) {
-        this.devices.remove(device); // Using 'this' to refer to the current object's devices list
+        this.devices.remove(device);
         System.out.println(device.getDeviceId() + " removed from the home automation system.");
     }
 
     public void executeMorningRoutine() {
         System.out.println("Executing Morning Routine...");
-        for (SmartDevice device : this.devices) { // Using 'this' to refer to the current object's devices list
+        for (SmartDevice device : this.devices) {
             if (device instanceof SmartLight || device instanceof SmartThermostat || device instanceof SmartAppliance) {
                 device.turnOn();
                 device.performFunction();
@@ -170,7 +146,7 @@ class HomeAutomationSystem {
 
     public void executeAwayMode() {
         System.out.println("Executing Away Mode...");
-        for (SmartDevice device : this.devices) { // Using 'this' to refer to the current object's devices list
+        for (SmartDevice device : this.devices) {
             if (device instanceof SmartLight || device instanceof SmartDoorLock
                     || device instanceof SmartSecurityCamera) {
                 device.turnOff();
@@ -185,7 +161,7 @@ class HomeAutomationSystem {
 
     public void executeNightRoutine() {
         System.out.println("Executing Night Routine...");
-        for (SmartDevice device : this.devices) { // Using 'this' to refer to the current object's devices list
+        for (SmartDevice device : this.devices) {
             if (device instanceof SmartLight || device instanceof SmartThermostat
                     || device instanceof SmartSecurityCamera) {
                 device.turnOff();
@@ -200,7 +176,7 @@ class HomeAutomationSystem {
 
     public void executeSecurityAlert() {
         System.out.println("Executing Security Alert...");
-        for (SmartDevice device : this.devices) { // Using 'this' to refer to the current object's devices list
+        for (SmartDevice device : this.devices) {
             if (device instanceof SmartDoorLock || device instanceof SmartSecurityCamera) {
                 device.turnOn();
                 device.performFunction();
@@ -213,8 +189,6 @@ public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         HomeAutomationSystem homeSystem = new HomeAutomationSystem();
-
-        // Create and add devices to the system
         SmartDevice[] devicesArray = {
                 new SmartLight("Light1"),
                 new SmartThermostat("Thermostat"),
@@ -223,8 +197,8 @@ public class Main {
                 new SmartAppliance("Appliance")
         };
 
-        for (SmartDevice device : devicesArray) {
-            homeSystem.addDevice(device);
+        for (int i = 0; i < devicesArray.length; i++) {
+            homeSystem.addDevice(devicesArray[i]);
         }
 
         while (true) {

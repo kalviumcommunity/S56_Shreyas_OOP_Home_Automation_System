@@ -27,15 +27,15 @@ abstract class SmartDevice {
     public void turnOn() {
         if (!this.status) {
             this.status = true;
-            devicesOn++; 
+            devicesOn++;
         }
         System.out.println(this.deviceId + " is now ON.");
     }
 
     public void turnOff() {
-        if (this.status) { 
+        if (this.status) {
             this.status = false;
-            devicesOn--; 
+            devicesOn--;
         }
         System.out.println(this.deviceId + " is now OFF.");
     }
@@ -138,6 +138,7 @@ class SmartAppliance extends SmartDevice {
 // Home Automation System class
 class HomeAutomationSystem {
     private List<SmartDevice> devices;
+    private static int totalDevicesInSystem = 0;
 
     public HomeAutomationSystem() {
         this.devices = new ArrayList<>();
@@ -145,11 +146,13 @@ class HomeAutomationSystem {
 
     public void addDevice(SmartDevice device) {
         this.devices.add(device);
+        totalDevicesInSystem++;
         System.out.println(device.getDeviceId() + " added to the home automation system.");
     }
 
     public void removeDevice(SmartDevice device) {
         this.devices.remove(device);
+        totalDevicesInSystem--;
         System.out.println(device.getDeviceId() + " removed from the home automation system.");
     }
 
@@ -202,6 +205,11 @@ class HomeAutomationSystem {
             }
         }
     }
+
+    public static void getSummary() {
+        System.out.println("Total devices across all systems: " + SmartDevice.getTotalDevices());
+        System.out.println("Devices that are currently ON: " + SmartDevice.getDevicesOn());
+    }
 }
 
 public class Main {
@@ -220,8 +228,7 @@ public class Main {
             homeSystem.addDevice(devicesArray[i]);
         }
 
-        System.out.println("Total devices: " + SmartDevice.getTotalDevices());
-        System.out.println("Devices that are ON: " + SmartDevice.getDevicesOn());
+        HomeAutomationSystem.getSummary();
 
         while (true) {
             System.out.println("\nChoose an option:");
@@ -229,7 +236,8 @@ public class Main {
             System.out.println("2. Execute Away Mode");
             System.out.println("3. Execute Night Routine");
             System.out.println("4. Execute Security Alert");
-            System.out.println("5. Exit");
+            System.out.println("5. Show Summary");
+            System.out.println("6. Exit");
 
             int choice = scanner.nextInt();
             switch (choice) {
@@ -246,13 +254,16 @@ public class Main {
                     homeSystem.executeSecurityAlert();
                     break;
                 case 5:
+                    HomeAutomationSystem.getSummary();
+                    break;
+                case 6:
                     System.out.println("Exiting...");
                     return;
                 default:
                     System.out.println("Invalid choice. Please try again.");
             }
 
-            System.out.println("Devices that are ON: " + SmartDevice.getDevicesOn());
+            HomeAutomationSystem.getSummary();
         }
     }
 }

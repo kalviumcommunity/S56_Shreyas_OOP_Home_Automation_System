@@ -54,13 +54,27 @@ abstract class SmartDevice {
 
 // Smart Light class inheriting from SmartDevice
 class SmartLight extends SmartDevice {
+    private int brightness;
+
     public SmartLight(String deviceId) {
         super(deviceId);
+        this.brightness = 50; // Default brightness
+    }
+
+    // Accessor (Getter) for brightness
+    public int getBrightness() {
+        return brightness;
+    }
+
+    // Mutator (Setter) for brightness
+    public void setBrightness(int brightness) {
+        this.brightness = brightness;
+        System.out.println(this.getDeviceId() + " brightness set to " + this.brightness + "%.");
     }
 
     public void performFunction() {
         if (this.isOn()) {
-            System.out.println(this.getDeviceId() + " is providing light.");
+            System.out.println(this.getDeviceId() + " is providing light at " + this.brightness + "% brightness.");
         } else {
             System.out.println(this.getDeviceId() + " is off, no light.");
         }
@@ -76,6 +90,12 @@ class SmartThermostat extends SmartDevice {
         this.temperature = 20; // Default temperature
     }
 
+    // Accessor (Getter) for temperature
+    public int getTemperature() {
+        return this.temperature;
+    }
+
+    // Mutator (Setter) for temperature
     public void setTemperature(int temperature) {
         this.temperature = temperature;
         System.out.println(this.getDeviceId() + " temperature set to " + this.temperature + " degrees.");

@@ -120,6 +120,42 @@ class SmartThermostat extends SmartDevice {
     }
 }
 
+// SmartSpeaker class inheriting from SmartDevice (New class for hierarchical
+// inheritance)
+class SmartSpeaker extends SmartDevice {
+    private int volume;
+
+    // Default constructor for SmartSpeaker
+    public SmartSpeaker() {
+        super("DefaultSpeaker"); // Default deviceId
+        this.volume = 50; // Default volume set to 50%
+    }
+
+    // Parameterized constructor for SmartSpeaker
+    public SmartSpeaker(String deviceId) {
+        super(deviceId);
+        this.volume = 50; // Default volume set to 50%
+    }
+
+    public int getVolume() {
+        return this.volume;
+    }
+
+    public void setVolume(int volume) {
+        this.volume = volume;
+        System.out.println(this.getDeviceId() + " volume set to " + this.volume + "%.");
+    }
+
+    @Override
+    public void performFunction() {
+        if (this.isOn()) {
+            System.out.println(this.getDeviceId() + " is playing music at " + this.volume + "% volume.");
+        } else {
+            System.out.println(this.getDeviceId() + " is off, not playing any music.");
+        }
+    }
+}
+
 // Home Automation System class to manage multiple smart devices
 class HomeAutomationSystem {
     private List<SmartDevice> devices;
@@ -145,7 +181,7 @@ class HomeAutomationSystem {
     public void executeMorningRoutine() {
         System.out.println("Executing Morning Routine...");
         for (SmartDevice device : this.devices) {
-            if (device instanceof SmartLight || device instanceof SmartThermostat) {
+            if (device instanceof SmartLight || device instanceof SmartThermostat || device instanceof SmartSpeaker) {
                 device.turnOn();
                 device.performFunction();
             }
@@ -175,16 +211,20 @@ public class Main {
         // Using parameterized constructors
         SmartDevice light = new SmartLight("LivingRoomLight");
         SmartDevice thermostat = new SmartThermostat("BedroomThermostat");
+        SmartDevice speaker = new SmartSpeaker("LivingRoomSpeaker"); // New SmartSpeaker
 
         // Using default constructors
         SmartDevice defaultLight = new SmartLight();
         SmartDevice defaultThermostat = new SmartThermostat();
+        SmartDevice defaultSpeaker = new SmartSpeaker(); // New default speaker
 
         // Adding devices to the system
         homeSystem.addDevice(light);
         homeSystem.addDevice(thermostat);
+        homeSystem.addDevice(speaker); // Added SmartSpeaker
         homeSystem.addDevice(defaultLight);
         homeSystem.addDevice(defaultThermostat);
+        homeSystem.addDevice(defaultSpeaker); // Added default SmartSpeaker
 
         // Displaying the summary of devices
         HomeAutomationSystem.getSummary();

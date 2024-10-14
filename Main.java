@@ -52,29 +52,48 @@ abstract class SmartDevice {
     }
 }
 
-// SmartLight class inheriting from SmartDevice
 class SmartLight extends SmartDevice {
     private int brightness;
 
-    // Default constructor for SmartLight
+    // Default constructor
     public SmartLight() {
-        super("DefaultLight"); // Default deviceId
-        this.brightness = 50; // Default brightness set to 50%
+        super("DefaultLight");
+        this.brightness = 50;
     }
 
-    // Parameterized constructor for SmartLight
+    // Parameterized constructor
     public SmartLight(String deviceId) {
         super(deviceId);
-        this.brightness = 50; // Default brightness set to 50%
+        this.brightness = 50;
     }
 
     public int getBrightness() {
         return brightness;
     }
 
+    // Original method to set brightness by percentage
     public void setBrightness(int brightness) {
         this.brightness = brightness;
         System.out.println(this.getDeviceId() + " brightness set to " + this.brightness + "%.");
+    }
+
+    // Overloaded method to set brightness using predefined levels
+    public void setBrightness(String level) {
+        switch (level.toLowerCase()) {
+            case "low":
+                this.brightness = 25;
+                break;
+            case "medium":
+                this.brightness = 50;
+                break;
+            case "high":
+                this.brightness = 100;
+                break;
+            default:
+                System.out.println("Unknown brightness level. Setting to default (50%).");
+                this.brightness = 50;
+        }
+        System.out.println(this.getDeviceId() + " brightness set to " + this.brightness + "% (" + level + ").");
     }
 
     public void performFunction() {

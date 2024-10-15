@@ -43,6 +43,9 @@ abstract class SmartDevice {
 
     public abstract void performFunction();
 
+    // New abstract method for status report
+    public abstract String getStatusReport();
+
     public static int getTotalDevices() {
         return totalDevices;
     }
@@ -77,31 +80,17 @@ class SmartLight extends SmartDevice {
         System.out.println(this.getDeviceId() + " brightness set to " + this.brightness + "%.");
     }
 
-    // Overloaded method to set brightness using predefined levels
-    public void setBrightness(String level) {
-        switch (level.toLowerCase()) {
-            case "low":
-                this.brightness = 25;
-                break;
-            case "medium":
-                this.brightness = 50;
-                break;
-            case "high":
-                this.brightness = 100;
-                break;
-            default:
-                System.out.println("Unknown brightness level. Setting to default (50%).");
-                this.brightness = 50;
-        }
-        System.out.println(this.getDeviceId() + " brightness set to " + this.brightness + "% (" + level + ").");
-    }
-
     public void performFunction() {
         if (this.isOn()) {
             System.out.println(this.getDeviceId() + " is providing light at " + this.brightness + "% brightness.");
         } else {
             System.out.println(this.getDeviceId() + " is off, no light.");
         }
+    }
+
+    @Override
+    public String getStatusReport() {
+        return "SmartLight [" + this.getDeviceId() + "] - Brightness: " + this.brightness + "%";
     }
 }
 
@@ -136,6 +125,11 @@ class SmartThermostat extends SmartDevice {
         } else {
             System.out.println(this.getDeviceId() + " is off, not regulating temperature.");
         }
+    }
+
+    @Override
+    public String getStatusReport() {
+        return "SmartThermostat [" + this.getDeviceId() + "] - Temperature: " + this.temperature + "°C";
     }
 }
 
@@ -173,6 +167,11 @@ class SmartSpeaker extends SmartDevice {
             System.out.println(this.getDeviceId() + " is off, not playing any music.");
         }
     }
+
+    @Override
+    public String getStatusReport() {
+        return "SmartSpeaker [" + this.getDeviceId() + "] - Volume: " + this.volume + "%";
+    }
 }
 
 // Home Automation System class to manage multiple smart devices
@@ -200,10 +199,9 @@ class HomeAutomationSystem {
     public void executeMorningRoutine() {
         System.out.println("Executing Morning Routine...");
         for (SmartDevice device : this.devices) {
-            if (device instanceof SmartLight || device instanceof SmartThermostat || device instanceof SmartSpeaker) {
-                device.turnOn();
-                device.performFunction();
-            }
+            device.turnOn();
+            device.performFunction();
+            System.out.println(device.getStatusReport()); // New behavior
         }
     }
 
@@ -211,7 +209,7 @@ class HomeAutomationSystem {
         System.out.println("Executing Away Mode...");
         for (SmartDevice device : this.devices) {
             device.turnOff();
-            device.performFunction();
+            System.out.println(device.getStatusReport()); // New behavior
         }
     }
 

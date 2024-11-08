@@ -1,5 +1,6 @@
 import java.util.*;
 
+// DEVICE MANAGER class to manage the total devices and devices that are ON
 class DeviceManager {
     private static int totalDevices = 0;
     private static int devicesOn = 0;
@@ -31,12 +32,12 @@ class DeviceManager {
     }
 }
 
-// Abstract base class for all smart devices
+// ABSTRACT BASE CLASS FOR ALL SMART DEVICES
 abstract class SmartDevice {
     private String deviceId;
     private boolean status;
 
-    // Parameterized constructor for SmartDevice
+    // PARAMETERIZED CONSTRUCTOR FOR SMARTDEVICE
     public SmartDevice(String deviceId) {
         this.deviceId = deviceId;
         this.status = false; // Default to off
@@ -69,17 +70,12 @@ abstract class SmartDevice {
 
     public abstract void performFunction();
 
-    // New abstract method for status report
     public abstract String getStatusReport();
 }
 
+    // DEVICE-SPECIFIC CLASSES
 class SmartLight extends SmartDevice {
     private int brightness;
-
-    public SmartLight() {
-        super("DefaultLight");
-        this.brightness = 50;
-    }
 
     public SmartLight(String deviceId) {
         super(deviceId);
@@ -112,11 +108,6 @@ class SmartLight extends SmartDevice {
 class SmartThermostat extends SmartDevice {
     private int temperature;
 
-    public SmartThermostat() {
-        super("DefaultThermostat");
-        this.temperature = 20;
-    }
-
     public SmartThermostat(String deviceId) {
         super(deviceId);
         this.temperature = 20;
@@ -148,11 +139,6 @@ class SmartThermostat extends SmartDevice {
 class SmartSpeaker extends SmartDevice {
     private int volume;
 
-    public SmartSpeaker() {
-        super("DefaultSpeaker");
-        this.volume = 50;
-    }
-
     public SmartSpeaker(String deviceId) {
         super(deviceId);
         this.volume = 50;
@@ -182,11 +168,40 @@ class SmartSpeaker extends SmartDevice {
     }
 }
 
+// Routine interface to allow different routines to be implemented
+interface Routine {
+    void execute(List<SmartDevice> devices);
+}
+
+class MorningRoutine implements Routine {
+    public void execute(List<SmartDevice> devices) {
+        System.out.println("Executing Morning Routine...");
+        for (SmartDevice device : devices) {
+            device.turnOn();
+            device.performFunction();
+            System.out.println(device.getStatusReport());
+        }
+    }
+}
+
+class AwayModeRoutine implements Routine {
+    public void execute(List<SmartDevice> devices) {
+        System.out.println("Executing Away Mode...");
+        for (SmartDevice device : devices) {
+            device.turnOff();
+            System.out.println(device.getStatusReport());
+        }
+    }
+}
+
+// HomeAutomationSystem to manage devices and routines
 class HomeAutomationSystem {
     private List<SmartDevice> devices;
+    private Map<String, Routine> routines;
 
     public HomeAutomationSystem() {
         this.devices = new ArrayList<>();
+        this.routines = new HashMap<>();
     }
 
     public void addDevice(SmartDevice device) {
@@ -200,20 +215,16 @@ class HomeAutomationSystem {
         System.out.println(device.getDeviceId() + " removed from the home automation system.");
     }
 
-    public void executeMorningRoutine() {
-        System.out.println("Executing Morning Routine...");
-        for (SmartDevice device : this.devices) {
-            device.turnOn();
-            device.performFunction();
-            System.out.println(device.getStatusReport());
-        }
+    public void addRoutine(String routineName, Routine routine) {
+        this.routines.put(routineName, routine);
     }
 
-    public void executeAwayMode() {
-        System.out.println("Executing Away Mode...");
-        for (SmartDevice device : this.devices) {
-            device.turnOff();
-            System.out.println(device.getStatusReport());
+    public void executeRoutine(String routineName) {
+        Routine routine = this.routines.get(routineName);
+        if (routine != null) {
+            routine.execute(this.devices);
+        } else {
+            System.out.println("Routine not found: " + routineName);
         }
     }
 
@@ -223,6 +234,7 @@ class HomeAutomationSystem {
     }
 }
 
+// Main class to interact with the system
 public class Main {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
@@ -236,6 +248,10 @@ public class Main {
         homeSystem.addDevice(thermostat);
         homeSystem.addDevice(speaker);
 
+        // Adding routines to the system
+        homeSystem.addRoutine("morning", new MorningRoutine());
+        homeSystem.addRoutine("away", new AwayModeRoutine());
+
         HomeAutomationSystem.getSummary();
 
         while (true) {
@@ -248,10 +264,10 @@ public class Main {
             int choice = sc.nextInt();
             switch (choice) {
                 case 1:
-                    homeSystem.executeMorningRoutine();
+                    homeSystem.executeRoutine("morning");
                     break;
                 case 2:
-                    homeSystem.executeAwayMode();
+                    homeSystem.executeRoutine("away");
                     break;
                 case 3:
                     HomeAutomationSystem.getSummary();

@@ -1,47 +1,78 @@
 import java.util.*;
 
-// DEVICE MANAGER class to manage the total devices and devices that are ON
-class DeviceManager {
-    private static int totalDevices = 0;
-    private static int devicesOn = 0;
+// DEVICE TRACKING INTERFACE
+interface DeviceTracker {
+    void registerDevice();
 
-    public static void registerDevice() {
+    void unregisterDevice();
+
+    void deviceTurnedOn();
+
+    void deviceTurnedOff();
+
+    int getTotalDevices();
+
+    int getDevicesOn();
+}
+
+// DEVICE MANAGER IMPLEMENTING THE TRACKER INTERFACE
+class DeviceManager implements DeviceTracker {
+    private int totalDevices = 0;
+    private int devicesOn = 0;
+
+    public void registerDevice() {
         totalDevices++;
     }
 
-    public static void unregisterDevice() {
+    public void unregisterDevice() {
         if (totalDevices > 0)
             totalDevices--;
     }
 
-    public static void deviceTurnedOn() {
+    public void deviceTurnedOn() {
         devicesOn++;
     }
 
-    public static void deviceTurnedOff() {
+    public void deviceTurnedOff() {
         if (devicesOn > 0)
             devicesOn--;
     }
 
-    public static int getTotalDevices() {
+    public int getTotalDevices() {
         return totalDevices;
     }
 
-    public static int getDevicesOn() {
+    public int getDevicesOn() {
         return devicesOn;
     }
 }
 
-// ABSTRACT BASE CLASS FOR ALL SMART DEVICES
-abstract class SmartDevice {
+// SMART DEVICE INTERFACE
+interface SmartDevice {
+    String getDeviceId();
+
+    boolean isOn();
+
+    void turnOn();
+
+    void turnOff();
+
+    void performFunction();
+
+    String getStatusReport();
+}
+
+// ABSTRACT SMART DEVICE IMPLEMENTING SMART DEVICE INTERFACE
+abstract class AbstractSmartDevice implements SmartDevice {
     private String deviceId;
     private boolean status;
+    private DeviceTracker deviceTracker;
 
-    // PARAMETERIZED CONSTRUCTOR FOR SMARTDEVICE
-    public SmartDevice(String deviceId) {
+    public AbstractSmartDevice(String deviceId, DeviceTracker deviceTracker) {
         this.deviceId = deviceId;
-        this.status = false; // Default to off
-        DeviceManager.registerDevice();
+        this.status = false;
+        this.deviceTracker = deviceTracker;
+        deviceTracker.registerDevice();
     }
 
     public String getDeviceId() {
@@ -55,7 +86,7 @@ abstract class SmartDevice {
     public void turnOn() {
         if (!this.status) {
             this.status = true;
-            DeviceManager.deviceTurnedOn();
+            deviceTracker.deviceTurnedOn();
         }
         System.out.println(this.deviceId + " is now ON.");
     }
@@ -63,7 +94,7 @@ abstract class SmartDevice {
     public void turnOff() {
         if (this.status) {
             this.status = false;
-            DeviceManager.deviceTurnedOff();
+            deviceTracker.deviceTurnedOff();
         }
         System.out.println(this.deviceId + " is now OFF.");
     }
@@ -73,12 +104,12 @@ abstract class SmartDevice {
     public abstract String getStatusReport();
 }
 
-    // DEVICE-SPECIFIC CLASSES
-class SmartLight extends SmartDevice {
+// SMART LIGHT DEVICE
+class SmartLight extends AbstractSmartDevice {
     private int brightness;
 
-    public SmartLight(String deviceId) {
-        super(deviceId);
+    public SmartLight(String deviceId, DeviceTracker deviceTracker) {
+        super(deviceId, deviceTracker);
         this.brightness = 50;
     }
 
@@ -105,11 +136,12 @@ class SmartLight extends SmartDevice {
     }
 }
 
-class SmartThermostat extends SmartDevice {
+// SMART THERMOSTAT DEVICE
+class SmartThermostat extends AbstractSmartDevice {
     private int temperature;
 
-    public SmartThermostat(String deviceId) {
-        super(deviceId);
+    public SmartThermostat(String deviceId, DeviceTracker deviceTracker) {
+        super(deviceId, deviceTracker);
         this.temperature = 20;
     }
 
@@ -136,11 +168,12 @@ class SmartThermostat extends SmartDevice {
     }
 }
 
-class SmartSpeaker extends SmartDevice {
+// SMART SPEAKER DEVICE
+class SmartSpeaker extends AbstractSmartDevice {
     private int volume;
 
-    public SmartSpeaker(String deviceId) {
-        super(deviceId);
+    public SmartSpeaker(String deviceId, DeviceTracker deviceTracker) {
+        super(deviceId, deviceTracker);
         this.volume = 50;
     }
 
@@ -153,7 +186,6 @@ class SmartSpeaker extends SmartDevice {
         System.out.println(this.getDeviceId() + " volume set to " + this.volume + "%.");
     }
 
-    @Override
     public void performFunction() {
         if (this.isOn()) {
             System.out.println(this.getDeviceId() + " is playing music at " + this.volume + "% volume.");
@@ -168,7 +200,7 @@ class SmartSpeaker extends SmartDevice {
     }
 }
 
-// Routine interface to allow different routines to be implemented
+// ROUTINE INTERFACE
 interface Routine {
     void execute(List<SmartDevice> devices);
 }
@@ -194,14 +226,16 @@ class AwayModeRoutine implements Routine {
     }
 }
 
-// HomeAutomationSystem to manage devices and routines
+// HOME AUTOMATION SYSTEM TO MANAGE DEVICES AND ROUTINES
 class HomeAutomationSystem {
     private List<SmartDevice> devices;
     private Map<String, Routine> routines;
+    private DeviceTracker deviceTracker;
 
-    public HomeAutomationSystem() {
+    public HomeAutomationSystem(DeviceTracker deviceTracker) {
         this.devices = new ArrayList<>();
         this.routines = new HashMap<>();
+        this.deviceTracker = deviceTracker;
     }
 
     public void addDevice(SmartDevice device) {
@@ -211,7 +245,7 @@ class HomeAutomationSystem {
 
     public void removeDevice(SmartDevice device) {
         this.devices.remove(device);
-        DeviceManager.unregisterDevice();
+        deviceTracker.unregisterDevice();
         System.out.println(device.getDeviceId() + " removed from the home automation system.");
     }
 
@@ -228,31 +262,31 @@ class HomeAutomationSystem {
         }
     }
 
-    public static void getSummary() {
-        System.out.println("Total devices across all systems: " + DeviceManager.getTotalDevices());
-        System.out.println("Devices that are currently ON: " + DeviceManager.getDevicesOn());
+    public void getSummary() {
+        System.out.println("Total devices across all systems: " + deviceTracker.getTotalDevices());
+        System.out.println("Devices that are currently ON: " + deviceTracker.getDevicesOn());
     }
 }
 
-// Main class to interact with the system
+// MAIN CLASS
 public class Main {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        HomeAutomationSystem homeSystem = new HomeAutomationSystem();
+        DeviceTracker deviceTracker = new DeviceManager();
+        HomeAutomationSystem homeSystem = new HomeAutomationSystem(deviceTracker);
 
-        SmartDevice light = new SmartLight("LivingRoomLight");
-        SmartDevice thermostat = new SmartThermostat("BedroomThermostat");
-        SmartDevice speaker = new SmartSpeaker("LivingRoomSpeaker");
+        SmartDevice light = new SmartLight("LivingRoomLight", deviceTracker);
+        SmartDevice thermostat = new SmartThermostat("BedroomThermostat", deviceTracker);
+        SmartDevice speaker = new SmartSpeaker("LivingRoomSpeaker", deviceTracker);
 
         homeSystem.addDevice(light);
         homeSystem.addDevice(thermostat);
         homeSystem.addDevice(speaker);
 
-        // Adding routines to the system
         homeSystem.addRoutine("morning", new MorningRoutine());
         homeSystem.addRoutine("away", new AwayModeRoutine());
 
-        HomeAutomationSystem.getSummary();
+        homeSystem.getSummary();
 
         while (true) {
             System.out.println("\nChoose an option:");
@@ -270,7 +304,7 @@ public class Main {
                     homeSystem.executeRoutine("away");
                     break;
                 case 3:
-                    HomeAutomationSystem.getSummary();
+                    homeSystem.getSummary();
                     break;
                 case 4:
                     System.out.println("Exiting...");
